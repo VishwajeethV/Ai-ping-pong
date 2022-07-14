@@ -11,6 +11,8 @@ var playerscore =0;
 var audio1;
 var pcscore =0;
 
+var gamestatus="";
+
 var ball = {
     x:350/2,
     y:480/2,
@@ -23,18 +25,45 @@ function restart(){
   location.reload();
 }
 
+function startGame() {
+  gamestatus="Start";
+  document.getElementById("status").innerHTML="Game loaded";
+
+}
+
 function setup(){
   var canvas =  createCanvas(700,400);
   canvas.position(530,180);
+  canvas.parent("canvas");
   video=createCapture(VIDEO);
-  video.size(500,400);
-  video.position(15,180);
+  video.hide();
+  posenet=ml5.poseNet(video,modelloaded);
+  posenet.on("pose",gotposes)
 }
+
+ function modelloaded() {
+  console.log("Model is loaded");
+ }
+
+ function gotposes(results) {
+    if (results.length>0) {
+      console.log(results);
+      rightwristX=results[0].pose.rightWrist.x;
+      rightwristY=results[0].pose.rightWrist.y;
+      rightwristscore=results[0].pose.keypoints[10].score;
+    }
+ }
 
 
   function draw(){
 
-    background(0); 
+
+    if (gamestatus=="start") {
+
+    
+
+    image(video,0,0,700,400);
+  
    
     fill("black");
     stroke("black");
@@ -43,6 +72,12 @@ function setup(){
     fill("black");
     stroke("black");
     rect(0,0,20,700);
+
+    if (rightwristscore>0.2) {
+      fill("red");
+      stroke("red");
+      circle(rightwristX,rightwristY,30);
+    }
     
    
       paddleInCanvas();
@@ -71,6 +106,8 @@ function setup(){
       
    
        move();
+
+     }
    }
    
    
