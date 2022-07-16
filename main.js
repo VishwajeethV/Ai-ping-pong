@@ -33,7 +33,7 @@ function restart(){
 }
 
 function startGame() {
-  gamestatus="Start";
+  gamestatus="start";
   document.getElementById("status").innerHTML="Game loaded";
 
 }
@@ -68,7 +68,7 @@ function setup(){
     if (gamestatus=="start") {
 
     
-
+    background(0);
     image(video,0,0,700,400);
   
    
